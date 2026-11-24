@@ -1,26 +1,109 @@
 @import "tailwindcss";
 
+/* ---------- 設計 tokens（顏色都用 6 位 hex，圖表會讀取並加透明度） ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --surface-2: #f2f4f7;
+  --border: #e7e9ee;
+  --border-strong: #d5d9e0;
+  --text: #0e1116;
+  --muted: #646b78;
+  --subtle: #9aa1ad;
+  --accent: #2f6bff;
+  --accent-soft: #eaf0ff;
+  /* 台股：紅漲綠跌 */
+  --up: #e23d4b;
+  --up-soft: #fdecee;
+  --down: #12a05c;
+  --down-soft: #e7f6ee;
+  --chart-grid: #f0f2f5;
+  --chart-text: #8a919d;
+  --shadow: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.03);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: #090a0c;
+    --surface: #111317;
+    --surface-2: #171a1f;
+    --border: #20242a;
+    --border-strong: #2c3139;
+    --text: #eef0f3;
+    --muted: #8d94a0;
+    --subtle: #5d6470;
+    --accent: #5b8cff;
+    --accent-soft: #15203a;
+    --up: #ff5c69;
+    --up-soft: #2a1417;
+    --down: #2fcf87;
+    --down-soft: #0f2419;
+    --chart-grid: #171a1f;
+    --chart-text: #6c737f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-up: var(--up);
+  --color-up-soft: var(--up-soft);
+  --color-down: var(--down);
+  --color-down-soft: var(--down-soft);
+  /* 英數用 Geist，中文退回系統黑體 */
+  --font-sans: var(--font-geist-sans), "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --shadow-card: var(--shadow);
+}
+
+html {
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 0;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* 報價更新時的淡入閃爍 */
+@keyframes flash-up {
+  from { background-color: var(--up-soft); }
+  to { background-color: transparent; }
+}
+@keyframes flash-down {
+  from { background-color: var(--down-soft); }
+  to { background-color: transparent; }
+}
+.flash-up { animation: flash-up 1.2s ease-out; }
+.flash-down { animation: flash-down 1.2s ease-out; }
+
+/* 細捲軸 */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flash-up, .flash-down { animation: none; }
 }
